@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"joiner-management/models"
 	"joiner-management/utils"
@@ -28,4 +29,14 @@ func (defaultHandler DefaultHandler) AddJoiner(response http.ResponseWriter, req
 	}
 
 	utils.ResponseCreated(response, joiner)
+}
+
+func (defaultHandler DefaultHandler) GetJoiners(response http.ResponseWriter, request *http.Request) {
+	var joiners []models.Joiner
+
+	if result := defaultHandler.DB.Find(&joiners); result.Error != nil {
+		fmt.Println(result.Error)
+	}
+
+	utils.ResponseOk(response, joiners)
 }
