@@ -16,6 +16,7 @@ func main() {
 	router := mux2.NewRouter()
 
 	router.HandleFunc("/joiner", defaultHandler.AddJoiner).Methods(http.MethodPost)
+	router.HandleFunc("/joiner", defaultHandler.GetJoiners).Methods(http.MethodGet)
 
 	log.Println("Joiner server is running")
 	http.ListenAndServe(":8000", router)
