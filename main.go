@@ -17,6 +17,7 @@ func main() {
 
 	router.HandleFunc("/joiner", defaultHandler.AddJoiner).Methods(http.MethodPost)
 	router.HandleFunc("/joiner", defaultHandler.GetJoiners).Methods(http.MethodGet)
+	router.HandleFunc("/joiner/{id}", defaultHandler.DeleteJoiner).Methods(http.MethodDelete)
 
 	log.Println("Joiner server is running")
 	http.ListenAndServe(":8000", router)

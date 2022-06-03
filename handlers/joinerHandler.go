@@ -3,11 +3,13 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"joiner-management/models"
 	"joiner-management/utils"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func (defaultHandler DefaultHandler) AddJoiner(response http.ResponseWriter, request *http.Request) {
@@ -39,4 +41,28 @@ func (defaultHandler DefaultHandler) GetJoiners(response http.ResponseWriter, re
 	}
 
 	utils.ResponseOk(response, joiners)
+}
+
+func (defaultHandler DefaultHandler) DeleteJoiner(response http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	id, _ := strconv.Atoi(vars["id"])
+
+	var joiner models.Joiner
+	joiner = defaultHandler.getJoinerById(id)
+
+	if (models.Joiner{}) == joiner {
+		utils.ResponseNotFound(response)
+	} else {
+		defaultHandler.DB.Delete(&joiner)
+		utils.ResponseNotContent(response)
+	}
+}
+
+func (defaultHandler DefaultHandler) getJoinerById(id int) models.Joiner {
+	var joiner models.Joiner
+	if result := defaultHandler.DB.First(&joiner, id); result.Error != nil {
+		fmt.Println(result.Error)
+		return models.Joiner{}
+	}
+	return joiner
 }
